@@ -5,7 +5,6 @@ import signal
 
 def connHTTP(s_tcp1, **param):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
-        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         s_tcp2.connect(('192.168.17.150', 8080))
         s_tcp2.sendall(param['data'])
         data2 = s_tcp2.recv(1024)
@@ -33,4 +32,5 @@ def initWAF():
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     initWAF()
