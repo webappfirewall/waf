@@ -8,6 +8,7 @@ def connHTTP(s_tcp1, **param):
         s_tcp2.connect(('192.168.17.150', 8080))
         s_tcp2.sendall(param['data'])
         data2 = s_tcp2.recv(1024)
+        print(data2)
         s_tcp1.sendall(data2)
         print(data2)
         return
@@ -22,7 +23,10 @@ def initWAF():
 
         while True:
             with conn:
+                print(addr)
+                print(conn)
                 data = conn.recv(1024)
+                print(data)
                 # if not data:
                 # break
                 t1 = threading.Thread(target=connHTTP,
