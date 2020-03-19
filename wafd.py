@@ -18,17 +18,18 @@ def initWAF():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
         s_tcp1.bind(('192.168.17.149', 80))
         s_tcp1.listen(5)
+        conn, addr = s_tcp1.accept()
 
         while True:
-            conn, addr = s_tcp1.accept()
-            data = conn.recv(1024)
-            if not data:
-                break
-            t1 = threading.Thread(target=connHTTP,
-                                  args=(s_tcp1, ),
-                                  kwargs={'data': data})
-            t1.start()
-            t1.join()
+            with conn:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                t1 = threading.Thread(target=connHTTP,
+                                      args=(s_tcp1, ),
+                                      kwargs={'data': data})
+                t1.start()
+                t1.join()
 
 
 if __name__ == '__main__':
