@@ -1,6 +1,6 @@
 import socket
 import threading
-import signal
+# import signal
 
 
 def connHTTP(s_tcp1, **param):
@@ -9,9 +9,7 @@ def connHTTP(s_tcp1, **param):
         s_tcp2.sendall(param['data'])
         data2 = s_tcp2.recv(1024)
         print(data2)
-        s_tcp1.sendall(data2)
-        print(data2)
-        return
+    s_tcp1.sendall(data2)
 
 
 def initWAF():
@@ -19,9 +17,9 @@ def initWAF():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
         s_tcp1.bind(('192.168.17.149', 80))
         s_tcp1.listen(5)
-        conn, addr = s_tcp1.accept()
 
         while True:
+            conn, addr = s_tcp1.accept()
             with conn:
                 print(addr)
                 print(conn)
@@ -37,5 +35,5 @@ def initWAF():
 
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    # signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     initWAF()
