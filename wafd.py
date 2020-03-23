@@ -22,7 +22,7 @@ def initWAF():
                 data = conn.recv(1024)
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     f1 = executor.submit(connHTTP, data)
-                    conn.sendall(f1.result())
+                    conn.send(f1.result())
 
 
 if __name__ == '__main__':
