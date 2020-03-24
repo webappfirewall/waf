@@ -1,5 +1,4 @@
 import socket
-# import concurrent.futures
 import threading
 
 
@@ -21,13 +20,6 @@ def initWAF():
             conn, addr = s_tcp1.accept()
             with conn:
                 data = conn.recv(1024)
-                # with concurrent.futures.ThreadPoolExecutor() as executor:
-                #    results = [executor.submit(connHTTP, data)]
-                #    for f in concurrent.futures.as_completed(results):
-                #        print(f.result())
-                #        conn.sendall(f.result())
-                # if not data:
-                #    break
                 thread = threading.Thread(target=connHTTP,
                                           args=(conn, data))
                 thread.start()
