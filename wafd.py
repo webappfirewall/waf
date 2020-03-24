@@ -1,13 +1,14 @@
 import socket
-import concurrent.futures
+# import concurrent.futures
+import threading
 
 
-def connHTTP(data):
+def connHTTP(conn, data):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
         s_tcp2.connect(('192.168.17.150', 80))
         s_tcp2.sendall(data)
         data2 = s_tcp2.recv(1024)
-        return data2
+        conn.sendall(data2)
 
 
 def initWAF():
@@ -19,15 +20,15 @@ def initWAF():
         while True:
             conn, addr = s_tcp1.accept()
             with conn:
-                print(conn)
-                print(addr)
                 data = conn.recv(1024)
-                print(data)
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    results = [executor.submit(connHTTP, data)]
-                    for f in concurrent.futures.as_completed(results):
-                        print(f.result())
-                        conn.sendall(f.result())
+                # with concurrent.futures.ThreadPoolExecutor() as executor:
+                #    results = [executor.submit(connHTTP, data)]
+                #    for f in concurrent.futures.as_completed(results):
+                #        print(f.result())
+                #        conn.sendall(f.result())
+                thread = threading.Thread(target=connHTTP, args=(conn, data))
+                thread.start()
+                thread.join()
 
 
 if __name__ == '__main__':
