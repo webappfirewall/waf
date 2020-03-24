@@ -19,10 +19,14 @@ def initWAF():
         while True:
             conn, addr = s_tcp1.accept()
             with conn:
+                print(conn)
+                print(addr)
                 data = conn.recv(1024)
+                print(data)
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     results = [executor.submit(connHTTP, data)]
                     for f in concurrent.futures.as_completed(results):
+                        print(f.result())
                         conn.sendall(f.result())
 
 
