@@ -16,9 +16,9 @@ def initWAF():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
         s_tcp1.bind(('192.168.17.149', 80))
         s_tcp1.listen()
+        conn, addr = s_tcp1.accept()
 
         while True:
-            conn, addr = s_tcp1.accept()
             with conn:
                 data = conn.recv(1024)
                 # with concurrent.futures.ThreadPoolExecutor() as executor:
