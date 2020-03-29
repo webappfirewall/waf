@@ -18,8 +18,24 @@ def extractURI(data):
     return uri.decode('utf-8')
 
 
-def connHTTP(conn, data):
+def extractRequestM(data):
+    method = bytearray()
+    flag = 0
 
+    for byte in data:
+        if byte == 32:
+            flag += 1
+            continue
+        if flag == 0:
+            method.append(byte)
+        elif flag == 1:
+            break
+
+    return method.decode('utf-8')
+
+
+def connHTTP(conn, data):
+    print("Reques Method: ", extractRequestM(data))
     print("URI: ", extractURI(data))
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
