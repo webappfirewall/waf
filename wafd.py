@@ -2,7 +2,7 @@ import socket
 import threading
 
 
-def connHTTP(conn, data):
+def extractURI(data):
     uri = bytearray()
     flag = 0
 
@@ -15,7 +15,12 @@ def connHTTP(conn, data):
         elif flag == 2:
             break
 
-    print("URI: ", uri.decode('utf-8'))
+    return uri.decode('utf-8')
+
+
+def connHTTP(conn, data):
+
+    print("URI: ", extractURI(data))
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
         s_tcp2.connect(('192.168.17.150', 80))
