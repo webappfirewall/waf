@@ -3,6 +3,20 @@ import threading
 
 
 def connHTTP(conn, data):
+    uri = bytearray()
+    flag = 0
+
+    for byte in data:
+        if byte == 32:
+            flag += 1
+            continue
+        if flag == 1:
+            uri.append(byte)
+        elif flag == 2:
+            break
+
+    print("URI: ", uri)
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
         s_tcp2.connect(('192.168.17.150', 80))
         s_tcp2.sendall(data)
