@@ -44,6 +44,7 @@ def insertMongoDB(uri, addr, requestM):
                          (username, password))
     db = client['waf']
     collection = db['trama']
+    print(addr)
     collection.insert_one(
         {'name': 'trama', 'ip': str(addr), 'valor': uri,
          'veredicto': '0', 'tipo': requestM.lower(), 'analizado': 'False'})
