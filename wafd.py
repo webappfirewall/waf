@@ -37,7 +37,7 @@ def extractRequestM(data):
     return method.decode('utf-8')
 
 
-def insertMongoDB(uri, conn, requestM):
+def insertMongoDB(uri, addr, requestM):
     username = urllib.parse.quote_plus('@dm1n')
     password = urllib.parse.quote_plus('Qw3rt&.12345')
     client = MongoClient('mongodb://%s:%s@192.168.17.146' %
@@ -45,7 +45,7 @@ def insertMongoDB(uri, conn, requestM):
     db = client['waf']
     collection = db['trama']
     collection.insert_one(
-        {'name': 'trama', 'ip': str(conn), 'valor': uri,
+        {'name': 'trama', 'ip': str(addr), 'valor': uri,
          'veredicto': '0', 'tipo': requestM.lower(), 'analizado': 'False'})
 
     while True:
@@ -58,14 +58,14 @@ def insertMongoDB(uri, conn, requestM):
     return doc['veredicto']
 
 
-def connHTTP(conn, data):
+def connHTTP(conn, addr, data):
     requestM = extractRequestM(data)
     veredicto = '0'
 
     if requestM == "GET":
         uri = extractURI(data)
         if re.match("/.*\\?.*", uri):
-            veredicto = insertMongoDB(uri, conn, requestM)
+            veredicto = insertMongoDB(uri, addr, requestM)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
@@ -89,7 +89,7 @@ def initWAF():
             with conn:
                 data = conn.recv(1024)
                 thread = threading.Thread(target=connHTTP,
-                                          args=(conn, data))
+                                          args=(conn, addr, data))
                 thread.start()
                 thread.join()
 
