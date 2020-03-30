@@ -1,3 +1,5 @@
+import urllib.parse
+from pymongo import MongoClient
 import socket
 import threading
 import re
@@ -35,21 +37,41 @@ def extractRequestM(data):
     return method.decode('utf-8')
 
 
+def insertMongoDB(uri, conn, requestM):
+    username = urllib.parse.quote_plus('@dm1n')
+    password = urllib.parse.quote_plus('Qw3rt&.12345')
+    client = MongoClient('mongodb://%s:%s@192.168.17.146' %
+                         (username, password))
+    db = client['waf']
+    collection = db['trama']
+    collection.insert_one(
+        {'name': 'trama', 'ip': str(conn), 'valor': uri,
+         'veredicto': '0', 'tipo': requestM, 'analizado': 'False'})
+
+    while True:
+        doc = collection.find_one({'name': 'trama'})
+        if doc['analizado'] == 'True':
+            break
+
+    return doc['veredicto']
+
+
 def connHTTP(conn, data):
     requestM = extractRequestM(data)
 
     if requestM == "GET":
         uri = extractURI(data)
-        if re.match("/.*\\?", uri):
-            print("URI with parameters")
-        else:
-            print("URI without parameters")
+        if re.match("/.*\\?.*", uri):
+            veredicto = insertMongoDB(uri, conn, requestM)
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
-        s_tcp2.connect(('192.168.17.150', 80))
-        s_tcp2.sendall(data)
-        data2 = s_tcp2.recv(1024)
-        conn.send(data2)
+    if veredicto == '0':
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
+            s_tcp2.connect(('192.168.17.150', 80))
+            s_tcp2.sendall(data)
+            data2 = s_tcp2.recv(1024)
+            conn.send(data2)
+    else:
+        print("SQL Injection Atack!")
 
 
 def initWAF():
