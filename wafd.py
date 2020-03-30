@@ -1,5 +1,6 @@
 import socket
 import threading
+import re
 
 
 def extractURI(data):
@@ -35,8 +36,14 @@ def extractRequestM(data):
 
 
 def connHTTP(conn, data):
-    print("Reques Method: ", extractRequestM(data))
-    print("URI: ", extractURI(data))
+    requestM = extractRequestM(data)
+
+    if requestM == "GET":
+        uri = extractURI(data)
+        if re.match("/.*\\?", uri):
+            print("URI with parameters")
+        else:
+            print("URI without parameters")
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
         s_tcp2.connect(('192.168.17.150', 80))
