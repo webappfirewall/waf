@@ -53,6 +53,8 @@ def insertMongoDB(uri, conn, requestM):
         if doc['analizado'] == 'True':
             break
 
+    collection.delete_one({'name': 'trama'})
+
     return doc['veredicto']
 
 
