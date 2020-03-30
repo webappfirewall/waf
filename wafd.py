@@ -46,7 +46,7 @@ def insertMongoDB(uri, conn, requestM):
     collection = db['trama']
     collection.insert_one(
         {'name': 'trama', 'ip': str(conn), 'valor': uri,
-         'veredicto': '0', 'tipo': requestM, 'analizado': 'False'})
+         'veredicto': '0', 'tipo': requestM.lower(), 'analizado': 'False'})
 
     while True:
         doc = collection.find_one({'name': 'trama'})
@@ -91,5 +91,5 @@ def initWAF():
                 thread.join()
 
 
-if __name__ == '__main__':
-    initWAF()
+# if __name__ == '__main__':
+#    initWAF()
