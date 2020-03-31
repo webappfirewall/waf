@@ -7,7 +7,7 @@ import re
 
 def extractParam(data):
     param = bytearray()
-    print(param)
+    print(data)
     return param.decode('utf-8')
 
 
