@@ -5,6 +5,12 @@ import threading
 import re
 
 
+def extractParam(data):
+    param = bytearray()
+    print(param)
+    return param.decode('utf-8')
+
+
 def extractURI(data):
     uri = bytearray()
     flag = 0
@@ -67,6 +73,8 @@ def connHTTP(conn, addr, data):
         uri = extractURI(data)
         if re.match("/.*\\?.*", uri):
             veredicto = insertMongoDB(uri, addr, requestM)
+    elif requestM == "POST":
+        param = extractParam(data)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
