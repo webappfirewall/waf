@@ -6,9 +6,8 @@ import re
 
 
 def extractParam(data):
-    param = bytearray()
-    print(data)
-    return param.decode('utf-8')
+    param = data.decode('utf-8').split('\r\n\r\n')
+    return param[1]
 
 
 def extractURI(data):
@@ -75,6 +74,7 @@ def connHTTP(conn, addr, data):
             veredicto = insertMongoDB(uri, addr, requestM)
     elif requestM == "POST":
         param = extractParam(data)
+        veredicto = insertMongoDB(param, addr, requestM)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
