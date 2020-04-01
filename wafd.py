@@ -26,7 +26,7 @@ def extractRequestM(data):
 
 def extractAgent(data):
     agent = data.decode('utf-8').split('\r\n')
-    print(agent)
+
     return agent[4]
 
 
@@ -55,13 +55,14 @@ def insertMongoDB(uri, addr, requestM, agent):
 def connHTTP(conn, addr, data):
     requestM = extractRequestM(data)
     veredicto = '0'
-    agent = extractAgent(data)
 
     if requestM == "GET":
         uri = extractURI(data)
         if re.match("/.*\\?.*", uri):
+            agent = extractAgent(data)
             veredicto = insertMongoDB(uri, addr, requestM, agent)
     elif requestM == "POST":
+        agent = extractAgent(data)
         param = extractParam(data)
         veredicto = insertMongoDB(param, addr, requestM, agent)
 
