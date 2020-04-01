@@ -26,7 +26,7 @@ def extractRequestM(data):
 
 def extractAgent(data):
     agent = data.decode('utf-8').split('\r\n')
-
+    print(agent)
     return agent[4]
 
 
