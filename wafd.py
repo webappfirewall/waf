@@ -12,6 +12,7 @@ def extractParam(data):
 
 def extractURI(data):
     uri = data.decode('utf-8').split('\r\n')
+    uri = uri[0].split(' ')
     print(uri)
     uri = bytearray()
     flag = 0
