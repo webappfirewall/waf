@@ -24,7 +24,13 @@ def extractRequestM(data):
     return method[0]
 
 
-def insertMongoDB(uri, addr, requestM):
+def extractAgent(data):
+    agent = data.decode('utf-8').split('\r\n')
+
+    return agent[4]
+
+
+def insertMongoDB(uri, addr, requestM, agent):
     username = urllib.parse.quote_plus('@dm1n')
     password = urllib.parse.quote_plus('Qw3rt&.12345')
     client = MongoClient('mongodb://%s:%s@192.168.17.146' %
@@ -33,7 +39,7 @@ def insertMongoDB(uri, addr, requestM):
     collection = db['trama']
 
     collection.insert_one(
-        {'name': 'trama', 'ip': str(addr[0]), 'valor': uri,
+        {'name': 'trama', 'ip': str(addr[0]), 'valor': uri, 'agent': agent,
          'veredicto': '0', 'tipo': requestM.lower(), 'analizado': 'False'})
 
     while True:
@@ -49,14 +55,15 @@ def insertMongoDB(uri, addr, requestM):
 def connHTTP(conn, addr, data):
     requestM = extractRequestM(data)
     veredicto = '0'
+    agent = extractAgent(data)
 
     if requestM == "GET":
         uri = extractURI(data)
         if re.match("/.*\\?.*", uri):
-            veredicto = insertMongoDB(uri, addr, requestM)
+            veredicto = insertMongoDB(uri, addr, requestM, agent)
     elif requestM == "POST":
         param = extractParam(data)
-        veredicto = insertMongoDB(param, addr, requestM)
+        veredicto = insertMongoDB(param, addr, requestM, agent)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
