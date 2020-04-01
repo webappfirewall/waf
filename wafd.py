@@ -13,36 +13,15 @@ def extractParam(data):
 def extractURI(data):
     uri = data.decode('utf-8').split('\r\n')
     uri = uri[0].split(' ')
-    print(uri)
-    uri = bytearray()
-    flag = 0
 
-    for byte in data:
-        if byte == 32:
-            flag += 1
-            continue
-        if flag == 1:
-            uri.append(byte)
-        elif flag == 2:
-            break
-
-    return uri.decode('utf-8')
+    return uri[1]
 
 
 def extractRequestM(data):
-    method = bytearray()
-    flag = 0
+    method = data.decode('utf-8').split('\r\n')
+    method = method[0].split(' ')
 
-    for byte in data:
-        if byte == 32:
-            flag += 1
-            continue
-        if flag == 0:
-            method.append(byte)
-        elif flag == 1:
-            break
-
-    return method.decode('utf-8')
+    return method[0]
 
 
 def insertMongoDB(uri, addr, requestM):
@@ -104,7 +83,3 @@ def initWAF():
                                           args=(conn, addr, data))
                 thread.start()
                 thread.join()
-
-
-# if __name__ == '__main__':
-#    initWAF()
