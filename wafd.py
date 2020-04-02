@@ -72,12 +72,10 @@ def connHTTP(conn, addr, data):
             s_tcp2.sendall(data)
             data2 = s_tcp2.recv(1024)
             conn.send(data2)
-    else:
-        print("SQL Injection Atack!")
 
 
 def initWAF():
-    print("***** Web Application Firewall v1.0 *****")
+    # print("***** Web Application Firewall v1.0 *****")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
         s_tcp1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s_tcp1.bind(('192.168.17.149', 80))
