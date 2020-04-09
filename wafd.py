@@ -52,24 +52,35 @@ def insertMongoDB(uri, addr, requestM, agent):
     return doc['veredicto']
 
 
-def connHTTP(conn, addr, data):
-    requestM = extractRequestM(data)
+def connHTTP(conn, addr):
+    bufer = bytearray()
+
+    with conn:
+        while True:
+            data = conn.recv(1024)
+            if data:
+                bufer.append(data)
+            elif not data:
+                break
+
+    print(bufer)
+    requestM = extractRequestM(bufer)
     veredicto = '0'
 
     if requestM == "GET":
-        uri = extractURI(data)
+        uri = extractURI(bufer)
         if re.match("/.*\\?.*", uri):
-            agent = extractAgent(data)
+            agent = extractAgent(bufer)
             veredicto = insertMongoDB(uri, addr, requestM, agent)
     elif requestM == "POST":
-        agent = extractAgent(data)
-        param = extractParam(data)
+        agent = extractAgent(bufer)
+        param = extractParam(bufer)
         veredicto = insertMongoDB(param, addr, requestM, agent)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
             s_tcp2.connect(('192.168.17.150', 80))
-            s_tcp2.sendall(data)
+            s_tcp2.sendall(bufer)
             data2 = s_tcp2.recv(1024)
             conn.send(data2)
 
@@ -83,12 +94,5 @@ def initWAF():
 
         while True:
             conn, addr = s_tcp1.accept()
-            with conn:
-                while True:
-                    data = conn.recv(1024)
-                    if not data:
-                        break
-                thread = threading.Thread(target=connHTTP,
-                                          args=(conn, addr, data))
-                thread.start()
-                thread.join()
+            t = threading.Thread(target=connHTTP, args=(conn, addr))
+            t.start()
