@@ -84,7 +84,10 @@ def initWAF():
         while True:
             conn, addr = s_tcp1.accept()
             with conn:
-                data = conn.recv(1024)
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
                 thread = threading.Thread(target=connHTTP,
                                           args=(conn, addr, data))
                 thread.start()
