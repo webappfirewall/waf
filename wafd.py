@@ -55,7 +55,6 @@ def insertMongoDB(uri, addr, requestM, agent):
 def connHTTP(conn, addr):
     with conn:
         data = conn.recv(1024)
-
         requestM = extractRequestM(data)
         veredicto = '0'
 
@@ -73,8 +72,8 @@ def connHTTP(conn, addr):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
                 s_tcp2.connect(('192.168.17.150', 80))
                 s_tcp2.sendall(data)
-                data2 = s_tcp2.recv(200000)
-                conn.send(data2)
+                data2 = s_tcp2.recv(500000)
+                conn.sendall(data2)
 
 
 def initWAF():
