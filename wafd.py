@@ -61,6 +61,7 @@ def connHTTP(conn, addr):
                 break
 
     requestM = extractRequestM(data)
+    print(requestM)
     veredicto = '0'
 
     if requestM == "GET":
