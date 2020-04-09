@@ -53,34 +53,30 @@ def insertMongoDB(uri, addr, requestM, agent):
 
 
 def connHTTP(conn, addr):
-    bufer = bytearray()
-
     with conn:
         while True:
             data = conn.recv(1024)
-            if data:
-                bufer.append(data)
-            elif not data:
+            if not data:
                 break
 
-    print(bufer)
-    requestM = extractRequestM(bufer)
+    print(data)
+    requestM = extractRequestM(data)
     veredicto = '0'
 
     if requestM == "GET":
-        uri = extractURI(bufer)
+        uri = extractURI(data)
         if re.match("/.*\\?.*", uri):
-            agent = extractAgent(bufer)
+            agent = extractAgent(data)
             veredicto = insertMongoDB(uri, addr, requestM, agent)
     elif requestM == "POST":
-        agent = extractAgent(bufer)
-        param = extractParam(bufer)
+        agent = extractAgent(data)
+        param = extractParam(data)
         veredicto = insertMongoDB(param, addr, requestM, agent)
 
     if veredicto == '0':
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
             s_tcp2.connect(('192.168.17.150', 80))
-            s_tcp2.sendall(bufer)
+            s_tcp2.sendall(data)
             data2 = s_tcp2.recv(1024)
             conn.send(data2)
 
