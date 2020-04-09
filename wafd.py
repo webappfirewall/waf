@@ -56,10 +56,10 @@ def connHTTP(conn, addr):
     with conn:
         while True:
             data = conn.recv(1024)
+            print(data)
             if not data:
                 break
 
-    print(data)
     requestM = extractRequestM(data)
     veredicto = '0'
 
