@@ -54,14 +54,9 @@ def insertMongoDB(uri, addr, requestM, agent):
 
 def connHTTP(conn, addr):
     with conn:
-        while True:
-            data = conn.recv(1024)
-            print(data)
-            if not data:
-                break
+        data = conn.recv(1024)
 
     requestM = extractRequestM(data)
-    print(requestM)
     veredicto = '0'
 
     if requestM == "GET":
