@@ -73,7 +73,7 @@ def connHTTP(conn, addr):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
                 s_tcp2.connect(('192.168.17.150', 80))
                 s_tcp2.sendall(data)
-                data2 = s_tcp2.recv(4096)
+                data2 = s_tcp2.recv(10240)
                 conn.send(data2)
 
 
