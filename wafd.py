@@ -1,7 +1,7 @@
 import urllib.parse
 from pymongo import MongoClient
 import socket
-# import threading
+import threading
 import re
 
 
@@ -88,7 +88,7 @@ def initWAF():
 
         while True:
             conn, addr = s_tcp1.accept()
-            # t = threading.Thread(target=connHTTP, args=(conn, addr))
-            # t.start()
+            t = threading.Thread(target=connHTTP, args=(conn, addr))
+            t.start()
             # t.join()
-            connHTTP(conn, addr)
+            # connHTTP(conn, addr)
