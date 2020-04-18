@@ -54,7 +54,7 @@ def insertMongoDB(uri, addr, requestM, agent):
 
 def connHTTP(conn, addr):
     with conn:
-        data = conn.recv(1024)
+        data = conn.recv(2048)
         requestM = extractRequestM(data)
         veredicto = '0'
 
@@ -66,10 +66,7 @@ def connHTTP(conn, addr):
         elif requestM == "POST":
             agent = extractAgent(data)
             param = extractParam(data)
-            if not param == '':
-                veredicto = insertMongoDB(param, addr, requestM, agent)
-            else:
-                return
+            veredicto = insertMongoDB(param, addr, requestM, agent)
 
         if veredicto == '0':
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
