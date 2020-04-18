@@ -7,6 +7,7 @@ import re
 
 def extractParam(data):
     param = data.decode('utf-8').split('\r\n\r\n')
+    print(param)
     return param[1]
 
 
