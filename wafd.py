@@ -6,10 +6,7 @@ import re
 
 
 def extractParam(data):
-    print(data)
-    print(data.decode('utf-8'))
     param = data.decode('utf-8').split('\r\n\r\n')
-    print(param)
     return param[1]
 
 
@@ -69,7 +66,10 @@ def connHTTP(conn, addr):
         elif requestM == "POST":
             agent = extractAgent(data)
             param = extractParam(data)
-            veredicto = insertMongoDB(param, addr, requestM, agent)
+            if not param == '':
+                veredicto = insertMongoDB(param, addr, requestM, agent)
+            else:
+                return
 
         if veredicto == '0':
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
