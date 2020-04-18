@@ -66,8 +66,8 @@ def connHTTP(conn, addr):
         elif requestM == "POST":
             agent = extractAgent(data)
             param = extractParam(data)
-            print(param)
-            veredicto = insertMongoDB(param, addr, requestM, agent)
+            if not param == '':
+                veredicto = insertMongoDB(param, addr, requestM, agent)
 
         if veredicto == '0':
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
