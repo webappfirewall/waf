@@ -55,8 +55,8 @@ def insertMongoDB(uri, addr, requestM, agent):
 def connHTTP(conn, addr):
     with conn:
         data = conn.recv(2048)
-        print(data)
         requestM = extractRequestM(data)
+        veredicto = '1'
 
         if requestM == "GET":
             uri = extractURI(data)
