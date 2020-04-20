@@ -6,7 +6,7 @@ import re
 
 
 def responseBadRequest(conn):
-    response = "HTTP/1.1 400 Bad Request\r\nDate: Mon, 20 Apr 2020 00: 00: 00\r\nServer: Apache/2.4.18 (Ubuntu)\r\nX-NetworkManager-Status: online\r\nConnection: close"
+    response = "HTTP/1.1 449 Bad Request\r\nDate: Mon, 20 Apr 2020 00: 00: 00\r\nServer: Apache/2.4.18 (Ubuntu)\r\nX-NetworkManager-Status: online\r\nConnection: close"
     conn.sendall(response.encode())
 
 
