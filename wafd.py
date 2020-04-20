@@ -56,7 +56,7 @@ def connHTTP(conn, addr):
     with conn:
         data = conn.recv(2048)
         requestM = extractRequestM(data)
-        veredicto = '1'
+        veredicto = None
 
         if requestM == "GET":
             uri = extractURI(data)
@@ -79,7 +79,7 @@ def connHTTP(conn, addr):
 def initWAF():
     # print("***** Web Application Firewall v1.0 *****")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
-        s_tcp1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # s_tcp1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s_tcp1.bind(('192.168.17.149', 80))
         s_tcp1.listen()
 
