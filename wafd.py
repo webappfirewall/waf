@@ -56,7 +56,7 @@ def connHTTP(conn, addr):
     with conn:
         data = conn.recv(2048)
         requestM = extractRequestM(data)
-        veredicto = None
+        veredicto = '0'
 
         if requestM == "GET":
             uri = extractURI(data)
