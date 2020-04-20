@@ -5,6 +5,11 @@ import threading
 import re
 
 
+def responseBadRequest(conn):
+    response = "HTTP/1.1 400 Bad Request\r\nDate: Mon, 20 Apr 2020 00: 00: 00\r\nServer: Apache/2.4.18 (Ubuntu)\r\nX-NetworkManager-Status: online\r\nConnection: close"
+    conn.sendall(response.encode())
+
+
 def extractParam(data):
     param = data.decode('utf-8').split('\r\n\r\n')
     return param[1]
@@ -66,7 +71,12 @@ def connHTTP(conn, addr):
         elif requestM == "POST":
             agent = extractAgent(data)
             param = extractParam(data)
-            veredicto = insertMongoDB(param, addr, requestM, agent)
+
+            if param == '':
+                responseBadRequest(conn)
+                veredicto = '1'
+            else:
+                veredicto = insertMongoDB(param, addr, requestM, agent)
 
         if veredicto == '0':
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp2:
