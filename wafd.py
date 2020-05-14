@@ -6,7 +6,7 @@ import re
 
 
 def responseBadRequest(conn):
-    response = "HTTP/1.1 449 Bad Request\r\nDate: Mon, 20 Apr 2020 00: 00: 00\r\nServer: Apache/2.4.18 (Ubuntu)\r\nX-NetworkManager-Status: online\r\nConnection: close"
+    response = "HTTP/1.1 400 Bad Request\r\nDate: Mon, 20 Apr 2020 00: 00: 00\r\nServer: Apache/2.4.18 (Ubuntu)\r\nX-NetworkManager-Status: online\r\nConnection: close"
     conn.sendall(response.encode())
 
 
@@ -18,20 +18,17 @@ def extractParam(data):
 def extractURI(data):
     uri = data.decode('utf-8').split('\r\n')
     uri = uri[0].split(' ')
-
     return uri[1]
 
 
 def extractRequestM(data):
     method = data.decode('utf-8').split('\r\n')
     method = method[0].split(' ')
-
     return method[0]
 
 
 def extractAgent(data):
     agent = data.decode('utf-8').split('\r\n')
-
     return agent[4]
 
 
@@ -87,9 +84,7 @@ def connHTTP(conn, addr):
 
 
 def initWAF():
-    # print("***** Web Application Firewall v1.0 *****")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_tcp1:
-        # s_tcp1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s_tcp1.bind(('192.168.17.149', 80))
         s_tcp1.listen()
 
@@ -97,5 +92,3 @@ def initWAF():
             conn, addr = s_tcp1.accept()
             t = threading.Thread(target=connHTTP, args=(conn, addr))
             t.start()
-            # t.join()
-            # connHTTP(conn, addr)
